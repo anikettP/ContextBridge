@@ -27,6 +27,37 @@
 
 ---
 
+## 🛡️ Privacy Policy, Security & API Data Safety
+
+ContextBridge was built from the ground up to address developer privacy and API key security concerns.
+
+### 🔒 1. 100% Local Browser Execution
+- **Zero External Telemetry**: ContextBridge contains no analytics, no external tracking scripts, and no remote server logging.
+- **No Remote Backend**: All conversation extraction, text compression, and secret redaction processes occur **100% locally** inside your web browser's memory.
+
+### 🔑 2. Automated Secret & API Key Redaction (`PrivacyShield`)
+Before any context prompt is generated or transferred to a target AI platform, ContextBridge passes the text through **PrivacyShield**. PrivacyShield automatically scans and redacts sensitive credentials:
+
+| Secret Category | Detected Patterns | Redaction Replacement |
+| :--- | :--- | :--- |
+| **OpenAI API Keys** | `sk-proj-...`, `sk-svcacct-...` | `[REDACTED_OPENAI_KEY]` |
+| **Anthropic API Keys** | `sk-ant-api...` | `[REDACTED_ANTHROPIC_KEY]` |
+| **Google API Keys** | `AIzaSy...` | `[REDACTED_GOOGLE_API_KEY]` |
+| **GitHub Tokens** | `ghp_...`, `github_pat_...` | `[REDACTED_GITHUB_TOKEN]` |
+| **AWS Access Keys** | `AKIA...`, `ASIA...` | `[REDACTED_AWS_ACCESS_KEY]` |
+| **SSH / RSA Keys** | `-----BEGIN PRIVATE KEY-----` | `[REDACTED_PRIVATE_KEY]` |
+| **Database URLs** | `postgres://`, `mongodb://`, `mysql://` | Passwords stripped automatically |
+| **JWTs & Secrets** | `password = "..."`, JWT bearer tokens | `[REDACTED_SECRET]` |
+
+### 🔒 3. Minimal Permissions & No Overreach
+ContextBridge follows Google's **Least Privilege Principle**:
+- **Restricted Host Permissions**: Access is strictly limited to the 7 supported AI domains (`chatgpt.com`, `claude.ai`, `gemini.google.com`, `grok.com`, `perplexity.ai`, `copilot.microsoft.com`, `chat.deepseek.com`). ContextBridge does **NOT** request `<all_urls>` permission.
+- **No Sensitive Access**: ContextBridge does **NOT** request access to browser history, cookies, credentials, or web requests.
+
+For full details, read our complete [PRIVACY.md Privacy Policy](PRIVACY.md).
+
+---
+
 ## 🏗️ Architectural Layer Breakdown
 
 ContextBridge is built with a pluggable, modular multi-tier architecture:
@@ -51,20 +82,6 @@ ContextBridge is built with a pluggable, modular multi-tier architecture:
 │ • Copilot Provider      │   │                         │   │   (25s Loop + Observer) │
 └─────────────────────────┘   └─────────────────────────┘   └─────────────────────────┘
 ```
-
-### Layer Descriptions
-
-1. **Provider Adapter Layer (`src/providers/`)**:
-   - Decoupled provider class implementation extending `AIProvider`.
-   - Uses 4-layer detection (URL patterns, document meta tags, and DOM signatures) to extract user/assistant turns.
-2. **Context Engine Layer (`src/context-engine/`)**:
-   - `ContextAnalyzer`: Scans raw message turns using regex and heuristic parsing to extract goals, technologies, architectural decisions, open tasks, and bugs.
-   - `ContextFormatter`: Packages metadata and turns into the AICP markdown structure.
-   - `PrivacyShield`: Sanitizes sensitive credentials and API tokens.
-   - `CodeAggregator`: Collects, categorizes, and formats code snippets by language.
-3. **UI & Storage Layer (`src/popup/`, `src/content/`, `src/storage/`)**:
-   - React 19 user interface with human-designed light & dark theme styling.
-   - Background MV3 service worker managing tab handoffs via `chrome.storage.local`.
 
 ---
 
@@ -200,4 +217,5 @@ npm test
 
 - **Author**: Aniket Patel ([@anikettP](https://github.com/anikettP))
 - **Bug Reports & Feedback**: `aniketpatel4p@gmail.com`
+- **Privacy Policy**: [PRIVACY.md](PRIVACY.md)
 - **License**: MIT License
