@@ -5,6 +5,7 @@ import { StrategySelector } from "./components/StrategySelector";
 import { PreviewEditor } from "./components/PreviewEditor";
 import { MemoryList } from "./components/MemoryList";
 import { ExportImportModal } from "./components/ExportImportModal";
+import { ProviderLogo } from "./components/ProviderLogos";
 
 import { ContextCompressor } from "../context-engine/compressor";
 import { providerRegistry } from "../providers/registry/ProviderRegistry";
@@ -365,8 +366,8 @@ export const App: React.FC = () => {
             <div className="panel-card" style={{ borderLeft: `4px solid ${targetInfo.accentColor}` }}>
               <div className="panel-header">
                 <span className="panel-title">Target Destination AI</span>
-                <span style={{ fontSize: "11px", fontWeight: "700", color: targetInfo.accentColor }}>
-                  {targetInfo.name} Selected
+                <span style={{ fontSize: "11px", fontWeight: "700", color: targetInfo.accentColor, display: "flex", alignItems: "center", gap: "4px" }}>
+                  <ProviderLogo providerId={targetProvider} size={14} /> {targetInfo.name} Selected
                 </span>
               </div>
 
@@ -393,7 +394,7 @@ export const App: React.FC = () => {
                       className="target-mini-icon"
                       style={{ background: p.metadata.accentColor }}
                     >
-                      {p.name.charAt(0)}
+                      <ProviderLogo providerId={p.id} size={14} />
                     </div>
                     <span className="target-mini-name">{p.name}</span>
                   </div>

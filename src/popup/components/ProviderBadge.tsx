@@ -1,6 +1,7 @@
 import React from "react";
 import { SUPPORTED_PROVIDERS } from "../../shared/constants";
 import { ProviderId } from "../../shared/types";
+import { ProviderLogo } from "./ProviderLogos";
 import { CheckCircle2, AlertTriangle, Radio } from "lucide-react";
 
 interface ProviderBadgeProps {
@@ -40,7 +41,10 @@ export const ProviderBadge: React.FC<ProviderBadgeProps> = ({
       </div>
 
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "2px" }}>
-        <h2 style={{ fontSize: "16px", fontWeight: "700", color: "var(--text-main)" }}>
+        <h2 style={{ fontSize: "16px", fontWeight: "700", color: "var(--text-main)", display: "flex", alignItems: "center", gap: "8px" }}>
+          <span style={{ color: provider.accentColor, display: "flex", alignItems: "center" }}>
+            <ProviderLogo providerId={providerId} size={20} />
+          </span>
           {provider.name}
         </h2>
         <span style={{ fontSize: "11px", color: "var(--text-muted)", fontWeight: "500" }}>
@@ -52,8 +56,8 @@ export const ProviderBadge: React.FC<ProviderBadgeProps> = ({
         <div
           style={{
             fontSize: "11px",
-            color: "var(--warning)",
-            background: "var(--warning-light)",
+            color: "#d97706",
+            background: "#fffbebf5",
             padding: "6px 10px",
             borderRadius: "6px",
             display: "flex",
