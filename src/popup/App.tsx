@@ -390,6 +390,11 @@ export const App: React.FC = () => {
                       }
                     }}
                   >
+                    {p.id === targetProvider && (
+                      <span className="selected-check-badge">
+                        <Check size={10} strokeWidth={3} />
+                      </span>
+                    )}
                     <div
                       className="target-mini-icon"
                       style={{ background: p.metadata.accentColor }}

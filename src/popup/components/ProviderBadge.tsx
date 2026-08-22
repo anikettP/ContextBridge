@@ -2,7 +2,7 @@ import React from "react";
 import { SUPPORTED_PROVIDERS } from "../../shared/constants";
 import { ProviderId } from "../../shared/types";
 import { ProviderLogo } from "./ProviderLogos";
-import { CheckCircle2, AlertTriangle, Radio } from "lucide-react";
+import { CheckCircle2, AlertTriangle } from "lucide-react";
 
 interface ProviderBadgeProps {
   providerId: ProviderId;
@@ -21,7 +21,7 @@ export const ProviderBadge: React.FC<ProviderBadgeProps> = ({
     <div className="panel-card" style={{ borderLeft: `4px solid ${provider.accentColor}` }}>
       <div className="panel-header">
         <span className="panel-title" style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--success)" }}>
-          <Radio size={14} color="var(--success)" className="spin" style={{ animationDuration: "3s" }} /> Auto-Detected Active AI
+          <span className="pulse-dot" /> Connected Active AI
         </span>
         <span
           style={{
