@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "ContextBridge — Universal AI Context Sync",
   "short_name": "ContextBridge",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Seamlessly transfer conversation context, goals, architecture decisions, and code between ChatGPT, Claude, Gemini, Perplexity, Grok, Copilot, and DeepSeek.",
   "icons": {
     "16": "icons/icon16.png",
