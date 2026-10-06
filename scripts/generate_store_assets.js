@@ -351,7 +351,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
       ctx.fill(); ctx.stroke();
       ctx.font = '700 9.5px sans-serif';
       ctx.fillStyle = '#059669';
-      ctx.fillText('🛡️ 100% Local Privacy', 122.5, botY + 3.5);
+      ctx.fillText('100% Local Privacy', 122.5, botY + 3.5);
 
       // Right Feature
       ctx.fillStyle = 'rgba(37, 99, 235, 0.08)';
@@ -360,7 +360,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
       ctx.fill(); ctx.stroke();
       ctx.font = '700 9.5px sans-serif';
       ctx.fillStyle = '#2563eb';
-      ctx.fillText('⚡ 60-80% Token Savings', 317.5, botY + 3.5);
+      ctx.fillText('60-80% Token Savings', 317.5, botY + 3.5);
     }
 
     // 3. GENERATE MARQUEE PROMO TILE (1400x560 - LIGHT THEME)
@@ -433,9 +433,9 @@ const HTML_CONTENT = `<!DOCTYPE html>
 
       // Feature Highlight Cards (Left Side)
       const highlights = [
-        { icon: '🛡️', title: '100% Local Privacy Shield', desc: 'Auto-redacts API keys & secrets before transfer' },
-        { icon: '⚡', title: '60-80% Token Reduction', desc: 'Smart context compression engine' },
-        { icon: '🎯', title: 'Tailored AI Role Directives', desc: 'Pre-formats prompts for Senior Architect & Tech Lead roles' }
+        { title: '100% Local Privacy Shield', desc: 'Auto-redacts API keys & secrets before transfer' },
+        { title: '60-80% Token Reduction', desc: 'Smart context compression engine' },
+        { title: 'Tailored AI Role Directives', desc: 'Pre-formats prompts for Senior Architect & Tech Lead roles' }
       ];
 
       highlights.forEach((item, idx) => {
@@ -446,16 +446,13 @@ const HTML_CONTENT = `<!DOCTYPE html>
         ctx.roundRectCustom(80, hy, 560, 52, 12);
         ctx.fill(); ctx.stroke();
 
-        ctx.font = '20px sans-serif';
-        ctx.fillText(item.icon, 96, hy + 33);
-
         ctx.font = '700 14px sans-serif';
         ctx.fillStyle = '#0f172a';
-        ctx.fillText(item.title, 132, hy + 24);
+        ctx.fillText(item.title, 104, hy + 24);
 
         ctx.font = '500 12px sans-serif';
         ctx.fillStyle = '#64748b';
-        ctx.fillText(item.desc, 132, hy + 41);
+        ctx.fillText(item.desc, 104, hy + 41);
       });
 
       // RIGHT SIDE UI MOCKUP CARD (x: 710, y: 70, w: 610, h: 420)
@@ -566,7 +563,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
       ctx.textAlign = 'center';
       ctx.font = '900 16px sans-serif';
       ctx.fillStyle = '#ffffff';
-      ctx.fillText('Transfer Conversation Context to Claude 🚀', 730 + 285, 420);
+      ctx.fillText('Transfer Conversation Context to Claude', 730 + 285, 420);
     }
 
     // Helper for Header Banner on Screenshots (LIGHT THEME)
@@ -682,7 +679,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
       ctx.roundRectCustom(680, 160, 540, 480, 10); ctx.fill(); ctx.stroke();
 
       ctx.font = '700 12px sans-serif'; ctx.fillStyle = '#d97706';
-      ctx.fillText('⚡ INJECTED CONTEXT FROM CONTEXTBRIDGE', 695, 185);
+      ctx.fillText('INJECTED CONTEXT FROM CONTEXTBRIDGE', 695, 185);
 
       ctx.font = '500 11px monospace'; ctx.fillStyle = '#d97706';
       ctx.fillText('--- CONTEXTBRIDGE TRANSFER PACKAGE ---', 695, 210);
@@ -758,7 +755,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
 
       // Stats
       ctx.font = '700 11px sans-serif'; ctx.fillStyle = '#059669';
-      ctx.fillText('⚡ 2,850 Tokens (81.5% Saved • 96% Retention)', 485, 470);
+      ctx.fillText('2,850 Tokens (81.5% Saved • 96% Retention)', 485, 470);
 
       // Transfer Button
       const bGrad = ctx.createLinearGradient(475, 0, 805, 0);
@@ -768,7 +765,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
 
       ctx.textAlign = 'center';
       ctx.font = '900 14px sans-serif'; ctx.fillStyle = '#ffffff';
-      ctx.fillText('Transfer to Claude 🚀', 640, 520);
+      ctx.fillText('Transfer to Claude', 640, 520);
     }
 
     // 5. GENERATE SCREENSHOT 2: Privacy Shield (1280x800 - LIGHT THEME)
@@ -794,7 +791,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
 
       ctx.textAlign = 'left';
       ctx.font = '800 15px sans-serif'; ctx.fillStyle = '#059669';
-      ctx.fillText('🛡️ PRIVACY SHIELD ACTIVE — 100% CLIENT-SIDE LOCAL PROCESSING', 95, 166);
+      ctx.fillText('PRIVACY SHIELD ACTIVE — 100% CLIENT-SIDE LOCAL PROCESSING', 95, 166);
 
       ctx.textAlign = 'right';
       ctx.font = '600 12px sans-serif'; ctx.fillStyle = '#334155';
@@ -808,7 +805,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
       ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 1; ctx.stroke();
 
       ctx.font = '700 14px sans-serif'; ctx.fillStyle = '#dc2626';
-      ctx.fillText('⚠️ Raw Detected Conversation (Contains Secrets)', 90, 240);
+      ctx.fillText('Raw Detected Conversation (Contains Secrets)', 90, 240);
 
       ctx.fillStyle = '#ffffff';
       ctx.roundRectCustom(90, 260, 510, 350, 8); ctx.fill();
@@ -833,7 +830,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
       ctx.roundRectCustom(660, 210, 550, 420, 12); ctx.fill(); ctx.stroke();
 
       ctx.font = '700 14px sans-serif'; ctx.fillStyle = '#059669';
-      ctx.fillText('🔒 Sanitized & Redacted Context (Safe to Sync)', 680, 240);
+      ctx.fillText('Sanitized & Redacted Context (Safe to Sync)', 680, 240);
 
       ctx.fillStyle = '#ffffff';
       ctx.roundRectCustom(680, 260, 510, 350, 8); ctx.fill();
@@ -987,10 +984,10 @@ const HTML_CONTENT = `<!DOCTYPE html>
       ctx.fillText('SELECT COMPRESSION STRATEGY MODE', 70, 260);
 
       const strategies = [
-        { name: '🧠 Smart Compression (Recommended)', token: '~2,850 tokens', pct: '81.5% Saved', desc: 'Extracts core architecture decisions, latest state & active code snippets while stripping filler chat.' },
-        { name: '📝 Executive Summary Mode', token: '~1,200 tokens', pct: '92.2% Saved', desc: 'Generates a high-level bulleted summary of key requirements and decisions.' },
-        { name: '💻 Code & Schemas Only', token: '~1,800 tokens', pct: '88.3% Saved', desc: 'Isolates all code blocks, type definitions, and data structures.' },
-        { name: '📜 Full Raw History', token: '15,400 tokens', pct: '0% Saved', desc: 'Preserves every message word-for-word without any compression.' }
+        { name: 'Smart Compression (Recommended)', token: '~2,850 tokens', pct: '81.5% Saved', desc: 'Extracts core architecture decisions, latest state & active code snippets while stripping filler chat.' },
+        { name: 'Executive Summary Mode', token: '~1,200 tokens', pct: '92.2% Saved', desc: 'Generates a high-level bulleted summary of key requirements and decisions.' },
+        { name: 'Code & Schemas Only', token: '~1,800 tokens', pct: '88.3% Saved', desc: 'Isolates all code blocks, type definitions, and data structures.' },
+        { name: 'Full Raw History', token: '15,400 tokens', pct: '0% Saved', desc: 'Preserves every message word-for-word without any compression.' }
       ];
 
       strategies.forEach((s, idx) => {
@@ -1079,7 +1076,7 @@ const HTML_CONTENT = `<!DOCTYPE html>
         ctx.fillText('Source: ' + m.source + ' • ' + m.tokens + ' • Created: ' + m.date, 90, my + 62);
 
         // Memory Action Buttons
-        const btns = ['📋 Copy Prompt', '📤 Export JSON', '🗑️ Delete'];
+        const btns = ['Copy Prompt', 'Export JSON', 'Delete'];
         btns.forEach((bText, bi) => {
           const bx = 800 + bi * 115;
           ctx.fillStyle = bi === 0 ? '#2563eb' : '#ffffff';

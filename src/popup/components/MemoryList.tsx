@@ -57,7 +57,7 @@ export const MemoryList: React.FC<MemoryListProps> = ({
 
           {mem.context.goal && (
             <p style={{ fontSize: "12px", color: "var(--text-secondary)", marginTop: "4px" }}>
-              Goal: {mem.context.goal}
+              🎯 {mem.context.goal}
             </p>
           )}
 

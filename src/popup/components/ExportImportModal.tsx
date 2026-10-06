@@ -77,13 +77,13 @@ tags:
 
 > **Source Platform**: ${contextPackage.sourceProvider.toUpperCase()} | **Fidelity**: ${contextPackage.informationRetentionPercentage}%
 
-## Primary Goal
+## 🎯 Primary Goal
 ${meta.goal || "Not specified"}
 
-## Architectural Decisions
+## 🏗️ Architectural Decisions
 ${meta.decisions?.map((d) => `- ${d}`).join("\n") || "- None logged"}
 
-## Tech Stack
+## 🛠️ Tech Stack
 ${meta.technologies?.map((t) => `- \`${t}\``).join(", ") || "- N/A"}
 
 ---
