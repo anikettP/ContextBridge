@@ -75,7 +75,7 @@ export class CodeAggregator {
   private formatAggregatedMarkdown(convTitle: string | undefined, snippets: AggregatedCodeSnippet[]): string {
     const lines: string[] = [];
 
-    lines.push(`# 💻 Architecture & Code Specification Document`);
+    lines.push(`# Architecture & Code Specification Document`);
     lines.push(`**Project Topic**: ${convTitle || "AI Conversation Code Aggregation"}`);
     lines.push(`**Total Snippets Extracted**: ${snippets.length}`);
     lines.push(`**Generated**: ${new Date().toLocaleString()}`);
@@ -97,7 +97,7 @@ export class CodeAggregator {
     });
 
     grouped.forEach((snippetList, lang) => {
-      lines.push(`## 📁 Category: ${lang.toUpperCase()} (${snippetList.length} Snippets)`);
+      lines.push(`## Category: ${lang.toUpperCase()} (${snippetList.length} Snippets)`);
       lines.push(``);
 
       snippetList.forEach((s, idx) => {

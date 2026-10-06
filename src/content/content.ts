@@ -22,7 +22,7 @@ function showInPageNotification(message: string): void {
     "style",
     `
       position: fixed;
-      bottom: 24px;
+      bottom: 70px;
       right: 24px;
       background: #10b981;
       color: #ffffff;
@@ -31,7 +31,7 @@ function showInPageNotification(message: string): void {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-size: 12px;
       font-weight: 600;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
       z-index: 999999;
       transition: all 0.3s ease;
     `
@@ -103,7 +103,7 @@ async function checkAndAutoInjectOnLoad(): Promise<void> {
   });
 }
 
-// Run auto-inject check when script loads
+// Run auto-inject check & float pill when script loads
 if (typeof document !== "undefined") {
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", checkAndAutoInjectOnLoad);

@@ -1,4 +1,4 @@
-# 🌉 ContextBridge — Universal AI Conversation Context Sync
+# ContextBridge - Universal AI Conversation Context Sync
 
 [![Manifest V3](https://img.shields.io/badge/Chrome_Extension-Manifest_V3-2563eb.svg)](https://developer.chrome.com/docs/extensions/mv3/intro/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
@@ -10,32 +10,32 @@
 
 ---
 
-## 🌟 Key Features
+## Key Features
 
-- **⚡ 7 AI Platforms Supported**: Native adapter extraction and input composer auto-injection for ChatGPT, Claude, Gemini, Grok, Perplexity, Copilot, and DeepSeek.
-- **📜 Universal AI Context Protocol (AICP v1.0)**: Formats raw conversation turns into a structured continuation prompt preserving goals, tech stack frameworks, key architectural decisions, open action items, and recent turns with **60–80% token size reduction**.
-- **🛡️ 100% Local Privacy Shield**: Automated secret detection and redaction engine. Instantly sanitizes OpenAI/Anthropic/Google/GitHub API keys, AWS credentials, database connection strings, SSH private keys, and JWTs before context transfer. Zero server logging.
-- **🎭 Target Role Directives**: Direct receiving AIs to adopt specialized roles upon receiving context:
-  - 👨‍💻 **Senior Software Architect**
-  - 🐛 **Bug Hunter & Security Auditor**
-  - ⚡ **Performance Specialist**
-  - 📝 **Technical Writer**
-  - 🎯 **Rapid Prototyper**
-  - ✏️ **Custom Role Directive**
-- **💻 Code Specs & Architecture Aggregator**: Extract all code blocks written across 50+ conversation turns into a clean, downloadable architecture spec file (`architecture_specs.md`).
-- **🔄 25-Second SPA Composer Polling & MutationObserver**: Handles Single-Page Application (SPA) load delays automatically when opening new target AI tabs.
+- **7 AI Platforms Supported**: Native adapter extraction and input composer auto-injection for ChatGPT, Claude, Gemini, Grok, Perplexity, Copilot, and DeepSeek.
+- **Universal AI Context Protocol (AICP v1.0)**: Formats raw conversation turns into a structured continuation prompt preserving goals, tech stack frameworks, key architectural decisions, open action items, and recent turns with **60-80% token size reduction**.
+- **100% Local Privacy Shield**: Automated secret detection and redaction engine. Instantly sanitizes OpenAI/Anthropic/Google/GitHub API keys, AWS credentials, database connection strings, SSH private keys, and JWTs before context transfer. Zero server logging.
+- **Target Role Directives**: Direct receiving AIs to adopt specialized roles upon receiving context:
+  - Senior Software Architect
+  - Bug Hunter & Security Auditor
+  - Performance Specialist
+  - Technical Writer
+  - Rapid Prototyper
+  - Custom Role Directive
+- **Code Specs & Architecture Aggregator**: Extract all code blocks written across 50+ conversation turns into a clean, downloadable architecture spec file (`architecture_specs.md`).
+- **25-Second SPA Composer Polling & MutationObserver**: Handles Single-Page Application (SPA) load delays automatically when opening new target AI tabs.
 
 ---
 
-## 🛡️ Privacy Policy, Security & API Data Safety
+## Privacy Policy, Security & API Data Safety
 
 ContextBridge was built from the ground up to address developer privacy and API key security concerns.
 
-### 🔒 1. 100% Local Browser Execution
+### 1. 100% Local Browser Execution
 - **Zero External Telemetry**: ContextBridge contains no analytics, no external tracking scripts, and no remote server logging.
 - **No Remote Backend**: All conversation extraction, text compression, and secret redaction processes occur **100% locally** inside your web browser's memory.
 
-### 🔑 2. Automated Secret & API Key Redaction (`PrivacyShield`)
+### 2. Automated Secret & API Key Redaction (PrivacyShield)
 Before any context prompt is generated or transferred to a target AI platform, ContextBridge passes the text through **PrivacyShield**. PrivacyShield automatically scans and redacts sensitive credentials:
 
 | Secret Category | Detected Patterns | Redaction Replacement |
@@ -49,109 +49,84 @@ Before any context prompt is generated or transferred to a target AI platform, C
 | **Database URLs** | `postgres://`, `mongodb://`, `mysql://` | Passwords stripped automatically |
 | **JWTs & Secrets** | `password = "..."`, JWT bearer tokens | `[REDACTED_SECRET]` |
 
-### 🔒 3. Minimal Permissions & No Overreach
+### 3. Minimal Permissions & No Overreach
 ContextBridge follows Google's **Least Privilege Principle**:
-- **Restricted Host Permissions**: Access is strictly limited to the 7 supported AI domains (`chatgpt.com`, `claude.ai`, `gemini.google.com`, `grok.com`, `perplexity.ai`, `copilot.microsoft.com`, `chat.deepseek.com`). ContextBridge does **NOT** request `<all_urls>` permission.
+- **Restricted Host Permissions**: Access is strictly limited to the supported AI domains (`chatgpt.com`, `claude.ai`, `gemini.google.com`, `grok.com`, `perplexity.ai`, `copilot.microsoft.com`, `chat.deepseek.com`). ContextBridge does **NOT** request `<all_urls>` permission.
 - **No Sensitive Access**: ContextBridge does **NOT** request access to browser history, cookies, credentials, or web requests.
 
 For full details, read our complete [PRIVACY.md Privacy Policy](PRIVACY.md).
 
 ---
 
-## 🏗️ Architectural Layer Breakdown
+## Architectural Layer Breakdown
 
 ContextBridge is built with a pluggable, modular multi-tier architecture:
 
-```
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                              CONTEXTBRIDGE ARCHITECTURE                                │
-└────────────────────────────────────────────────────────────────────────────────────────┘
-                                           │
-         ┌─────────────────────────────────┼─────────────────────────────────┐
-         │                                 │                                 │
-┌─────────────────────────┐   ┌─────────────────────────┐   ┌─────────────────────────┐
-│   1. PROVIDER ADAPTER   │   │    2. CONTEXT ENGINE    │   │     3. UI & STORAGE     │
-│         LAYER           │   │          LAYER          │   │          LAYER          │
-├─────────────────────────┤   ├─────────────────────────┤   ├─────────────────────────┤
-│ • ChatGPT Provider      │   │ • ContextAnalyzer       │   │ • React 19 Popup UI     │
-│ • Claude Provider       │   │ • ContextCompressor     │   │ • Strategy Selector     │
-│ • Gemini Provider       │   │ • ContextFormatter      │   │ • Target Persona Bar    │
-│ • Grok / xAI Provider   │   │ • PrivacyShield Engine  │   │ • Chrome Storage Service│
-│ • DeepSeek Provider     │   │ • CodeAggregator        │   │ • Service Worker (MV3)  │
-│ • Perplexity Provider   │   │ • AICP v1.0 Generator   │   │ • Content Script Injector│
-│ • Copilot Provider      │   │                         │   │   (25s Loop + Observer) │
-└─────────────────────────┘   └─────────────────────────┘   └─────────────────────────┘
-```
+```mermaid
+graph TD
+    subgraph Architecture ["ContextBridge Architecture"]
+        subgraph Layer1 ["1. Provider Adapter Layer"]
+            L1_1["ChatGPT Provider"]
+            L1_2["Claude Provider"]
+            L1_3["Gemini Provider"]
+            L1_4["Grok / xAI Provider"]
+            L1_5["DeepSeek Provider"]
+            L1_6["Perplexity Provider"]
+            L1_7["Copilot Provider"]
+        end
 
----
+        subgraph Layer2 ["2. Context Engine Layer"]
+            L2_1["ContextAnalyzer"]
+            L2_2["ContextCompressor"]
+            L2_3["ContextFormatter"]
+            L2_4["PrivacyShield Engine"]
+            L2_5["CodeAggregator"]
+            L2_6["AICP v1.0 Generator"]
+        end
 
-## 📊 Data Flow Diagram (DFD)
+        subgraph Layer3 ["3. UI & Storage Layer"]
+            L3_1["React 19 Popup UI"]
+            L3_2["Strategy Selector"]
+            L3_3["Target Persona Bar"]
+            L3_4["Chrome Storage Service"]
+            L3_5["Service Worker (MV3)"]
+            L3_6["Content Script Injector"]
+        end
+    end
 
-### Level 0 — Context Transfer Overview
-```
-┌───────────────┐        Active Chat HTML        ┌──────────────────┐
-│  Source AI    ├───────────────────────────────►│  ContentScript   │
-│  (e.g ChatGPT)│                                │   (Extractor)    │
-└───────────────┘                                └────────┬─────────┘
-                                                          │ Extracted Turns
-                                                          ▼
-                                                 ┌──────────────────┐
-                                                 │  ContextEngine   │
-                                                 │ (PrivacyShield & │
-                                                 │  AICP Formatter) │
-                                                 └────────┬─────────┘
-                                                          │ Structured AICP Prompt
-                                                          ▼
-┌───────────────┐       Auto-Inject Composer     ┌──────────────────┐
-│   Target AI   │◄───────────────────────────────┤   Chrome Storage │
-│ (e.g. Claude) │                                │  (cb_active_ctx) │
-└───────────────┘                                └──────────────────┘
-```
-
-### Level 1 — Detailed Processing Pipeline
-
-```
-  [User Clicks "Transfer"]
-             │
-             ▼
-  ┌──────────────────────┐
-  │  DOM Turn Extraction │  ──► Extracts user & assistant message turns
-  └──────────┬───────────┘
-             │
-             ▼
-  ┌──────────────────────┐
-  │   Context Analyzer   │  ──► Parses goals, tech stack, decisions & code blocks
-  └──────────┬───────────┘
-             │
-             ▼
-  ┌──────────────────────┐
-  │ Target Persona Inject│  ──► Attaches Target Role Directive (e.g. Senior Architect)
-  └──────────┬───────────┘
-             │
-             ▼
-  ┌──────────────────────┐
-  │ PrivacyShield Redact │  ──► Replaces API keys, secrets & JWTs with safe tags
-  └──────────┬───────────┘
-             │
-             ▼
-  ┌──────────────────────┐
-  │ Chrome Storage Write │  ──► Stores AICP prompt in chrome.storage.local
-  └──────────┬───────────┘
-             │
-             ▼
-  ┌──────────────────────┐
-  │ Tab Create & Poll    │  ──► Opens Target AI tab; 25s loop waits for DOM composer
-  └──────────┬───────────┘
-             │
-             ▼
-  ┌──────────────────────┐
-  │ Auto-Inject Composer │  ──► Injects prompt via native property setters & execCommand
-  └──────────────────────┘
+    Layer1 --> Layer2
+    Layer2 --> Layer3
 ```
 
 ---
 
-## 🛠️ Technology Stack
+## Data Flow Diagram (DFD)
+
+### Level 0 - Context Transfer Overview
+```mermaid
+flowchart LR
+    Source["Source AI Tab"] -->|Active Chat HTML| Extractor["ContentScript Extractor"]
+    Extractor -->|Extracted Turns| Engine["ContextEngine (PrivacyShield & AICP Formatter)"]
+    Engine -->|Structured AICP Prompt| Storage["Chrome Storage (cb_active_ctx)"]
+    Storage -->|Auto-Inject Composer| Target["Target AI Tab"]
+```
+
+### Level 1 - Detailed Processing Pipeline
+
+```mermaid
+flowchart TD
+    Start["User Clicks Transfer"] --> DOM["DOM Turn Extraction"]
+    DOM --> Analyzer["Context Analyzer (Goals, Stack, Decisions)"]
+    Analyzer --> Persona["Target Persona Injector (Role Directive)"]
+    Persona --> Shield["PrivacyShield Redactor (API Keys & Secrets)"]
+    Shield --> Storage["Chrome Storage Write"]
+    Storage --> TabPoll["Tab Create & Composer Polling (25s Loop)"]
+    TabPoll --> Inject["Auto-Inject Prompt into Target Composer"]
+```
+
+---
+
+## Technology Stack
 
 - **Core**: HTML5, TypeScript 5.7, CSS3 (Vanilla design tokens)
 - **UI Framework**: React 19, Lucide React Icons
@@ -161,7 +136,7 @@ ContextBridge is built with a pluggable, modular multi-tier architecture:
 
 ---
 
-## 💻 Local Installation & Setup
+## Local Installation & Setup
 
 ### Prerequisites
 - Node.js `v18.0.0` or higher
@@ -196,7 +171,7 @@ ContextBridge is built with a pluggable, modular multi-tier architecture:
 
 ---
 
-## 🧪 Unit Testing
+## Unit Testing
 
 ContextBridge features an extensive test suite powered by **Vitest**:
 
@@ -213,7 +188,7 @@ npm test
 
 ---
 
-## 📄 License & Credits
+## License & Credits
 
 - **Author**: Aniket Patel ([@anikettP](https://github.com/anikettP))
 - **Bug Reports & Feedback**: `aniketpatel4p@gmail.com`

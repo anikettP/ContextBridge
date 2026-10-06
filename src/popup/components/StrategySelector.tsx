@@ -29,10 +29,10 @@ export const StrategySelector: React.FC<StrategySelectorProps> = ({
         value={strategy}
         onChange={(e) => onSelectStrategy(e.target.value as ContextStrategyMode)}
       >
-        <option value="smart">Smart Context (Recommended)</option>
-        <option value="full">Full Conversation (Complete Transcript)</option>
-        <option value="important">Important Context Only (Project Memory Specs)</option>
-        <option value="last_n">Last N Messages</option>
+        <option value="smart">Smart Optimization (Recommended)</option>
+        <option value="full">Complete Conversation History</option>
+        <option value="important">Key Decisions & Architecture</option>
+        <option value="last_n">Recent Messages Only</option>
       </select>
 
       <p style={{ fontSize: "11px", color: "var(--text-secondary)", marginTop: "2px", lineHeight: "1.4" }}>
@@ -41,8 +41,8 @@ export const StrategySelector: React.FC<StrategySelectorProps> = ({
 
       {strategy === "last_n" && (
         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "6px" }}>
-          <span style={{ fontSize: "12px", color: "var(--text-secondary)", fontWeight: "500" }}>
-            Number of recent turns:
+          <span style={{ fontSize: "11.5px", color: "var(--text-secondary)", fontWeight: "500" }}>
+            Number of recent messages:
           </span>
           <input
             type="number"

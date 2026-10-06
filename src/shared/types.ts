@@ -87,6 +87,7 @@ export interface ContextPackage {
   metadata: ConversationMetadata;
   recentMessages: Message[];
   formattedMarkdown: string;
+  redactedCredentialsCount?: number;
 }
 
 // Portable AICP format (v1.0)

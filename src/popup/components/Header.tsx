@@ -1,13 +1,19 @@
 import React from "react";
-import { ArrowLeftRight, Moon, Settings, Sun } from "lucide-react";
+import { ArrowLeftRight, Moon, Settings, ShieldCheck, Sun } from "lucide-react";
 
 interface HeaderProps {
   theme: "light" | "dark";
   onToggleTheme: () => void;
   onOpenOptions: () => void;
+  onOpenPrivacyModal?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ theme, onToggleTheme, onOpenOptions }) => {
+export const Header: React.FC<HeaderProps> = ({
+  theme,
+  onToggleTheme,
+  onOpenOptions,
+  onOpenPrivacyModal
+}) => {
   return (
     <header className="app-header">
       <div className="brand">
@@ -15,12 +21,25 @@ export const Header: React.FC<HeaderProps> = ({ theme, onToggleTheme, onOpenOpti
           <ArrowLeftRight size={18} />
         </div>
         <div>
-          <h1 className="brand-title">ContextBridge</h1>
-          <span className="brand-sub">AI Conversation Sync</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <h1 className="brand-title">ContextBridge</h1>
+            <span className="version-tag">v2.0</span>
+          </div>
+          <span className="brand-sub">Universal AI Context & Privacy Sync</span>
         </div>
       </div>
 
       <div className="header-tools">
+        {onOpenPrivacyModal && (
+          <button
+            className="icon-button privacy-btn"
+            onClick={onOpenPrivacyModal}
+            title="Google Web Store Privacy & Data Safety Shield"
+          >
+            <ShieldCheck size={15} color="var(--success)" />
+          </button>
+        )}
+
         <button
           className="icon-button"
           onClick={onToggleTheme}

@@ -6,6 +6,7 @@ import { PreviewEditor } from "./components/PreviewEditor";
 import { MemoryList } from "./components/MemoryList";
 import { ExportImportModal } from "./components/ExportImportModal";
 import { ProviderLogo } from "./components/ProviderLogos";
+import { PrivacyShieldModal } from "./components/PrivacyShieldModal";
 
 import { ContextCompressor } from "../context-engine/compressor";
 import { providerRegistry } from "../providers/registry/ProviderRegistry";
@@ -53,6 +54,7 @@ export const App: React.FC = () => {
   const [savedMemories, setSavedMemories] = useState<SavedProjectMemory[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [copiedToast, setCopiedToast] = useState<boolean>(false);
+  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState<boolean>(false);
 
   const compressor = new ContextCompressor();
 
@@ -315,187 +317,215 @@ export const App: React.FC = () => {
   const targetInfo = SUPPORTED_PROVIDERS[targetProvider] || SUPPORTED_PROVIDERS.claude;
   const currentPersonaInfo = PERSONA_DESCRIPTIONS[persona] || PERSONA_DESCRIPTIONS.architect;
 
+  const mainBodyRef = React.useRef<HTMLDivElement>(null);
+
+  const handleTabClick = (tabName: "transfer" | "preview" | "memories" | "export", index: number) => {
+    setActiveTab(tabName);
+    if (mainBodyRef.current) {
+      const width = mainBodyRef.current.clientWidth;
+      mainBodyRef.current.scrollTo({ left: index * width, behavior: "smooth" });
+    }
+  };
+
+  const handleMainScroll = () => {
+    if (!mainBodyRef.current) return;
+    const width = mainBodyRef.current.clientWidth;
+    if (width === 0) return;
+    const scrollLeft = mainBodyRef.current.scrollLeft;
+    const tabIndex = Math.round(scrollLeft / width);
+    const tabs: ("transfer" | "preview" | "memories" | "export")[] = ["transfer", "preview", "memories", "export"];
+    if (tabs[tabIndex] && tabs[tabIndex] !== activeTab) {
+      setActiveTab(tabs[tabIndex]);
+    }
+  };
+
   return (
     <div className="app-container">
+      {/* Background Ambient Textured Light Orbs */}
+      <div className="ambient-orb orb-1" />
+      <div className="ambient-orb orb-2" />
+      <div className="ambient-orb orb-3" />
+
       <Header
         theme={theme}
         onToggleTheme={toggleTheme}
         onOpenOptions={handleOpenOptions}
+        onOpenPrivacyModal={() => setIsPrivacyModalOpen(true)}
+      />
+
+      <PrivacyShieldModal
+        isOpen={isPrivacyModalOpen}
+        onClose={() => setIsPrivacyModalOpen(false)}
+        redactedCount={contextPackage?.redactedCredentialsCount || 0}
       />
 
       <div className="nav-bar">
         <button
           className={`tab-btn ${activeTab === "transfer" ? "active" : ""}`}
-          onClick={() => setActiveTab("transfer")}
+          onClick={() => handleTabClick("transfer", 0)}
         >
-          <Zap size={14} /> Transfer
+          <Zap size={13} /> Transfer
         </button>
         <button
           className={`tab-btn ${activeTab === "preview" ? "active" : ""}`}
-          onClick={() => setActiveTab("preview")}
+          onClick={() => handleTabClick("preview", 1)}
         >
-          <FileText size={14} /> Preview
+          <FileText size={13} /> Preview
         </button>
         <button
           className={`tab-btn ${activeTab === "memories" ? "active" : ""}`}
-          onClick={() => setActiveTab("memories")}
+          onClick={() => handleTabClick("memories", 2)}
         >
-          <Layers size={14} /> Memories ({savedMemories.length})
+          <Layers size={13} /> Memories ({savedMemories.length})
         </button>
         <button
           className={`tab-btn ${activeTab === "export" ? "active" : ""}`}
-          onClick={() => setActiveTab("export")}
+          onClick={() => handleTabClick("export", 3)}
         >
-          <ExternalLink size={14} /> Export
+          <ExternalLink size={13} /> Export
         </button>
       </div>
 
       {toastMessage && <div className="toast-banner">{toastMessage}</div>}
 
-      <div className="main-body">
-        {activeTab === "transfer" && (
-          <>
-            {/* Auto Detected Source Card */}
-            <ProviderBadge
-              providerId={providerId}
-              detectedMessageCount={messageCount}
-              isPartial={isPartial}
-            />
+      {/* Horizontal Swipeable & Scrollable Main Panel Slider */}
+      <div className="main-body" ref={mainBodyRef} onScroll={handleMainScroll}>
+        {/* Slide 1: Main Transfer Panel */}
+        <div className="panel-slide">
+          {/* Connected Active Source Card */}
+          <ProviderBadge
+            providerId={providerId}
+            detectedMessageCount={messageCount}
+            isPartial={isPartial}
+          />
 
-            {/* Target Destination Selector Card */}
-            <div className="panel-card" style={{ borderLeft: `4px solid ${targetInfo.accentColor}` }}>
-              <div className="panel-header">
-                <span className="panel-title">Target Destination AI</span>
-                <span style={{ fontSize: "11px", fontWeight: "700", color: targetInfo.accentColor, display: "flex", alignItems: "center", gap: "4px" }}>
-                  <ProviderLogo providerId={targetProvider} size={14} /> {targetInfo.name} Selected
-                </span>
-              </div>
+          {/* Target Destination Selector Card */}
+          <div className="panel-card" style={{ borderLeft: `4px solid ${targetInfo.accentColor}` }}>
+            <div className="panel-header">
+              <span className="panel-title">Target AI Destination</span>
+              <span style={{ fontSize: "10.5px", fontWeight: "700", color: targetInfo.accentColor, display: "flex", alignItems: "center", gap: "4px" }}>
+                <ProviderLogo providerId={targetProvider} size={13} /> {targetInfo.name} Selected
+              </span>
+            </div>
 
-              <div className="target-main-grid">
-                {availableTargets.map((p) => (
+            <div className="target-main-grid">
+              {availableTargets.map((p) => (
+                <div
+                  key={p.id}
+                  className={`target-mini-card ${p.id === targetProvider ? "selected" : ""}`}
+                  onClick={() => {
+                    setTargetProvider(p.id);
+                    if (rawConversation) {
+                      const proc = compressor.process(rawConversation, {
+                        mode: strategy,
+                        lastNCount,
+                        targetProvider: p.id,
+                        persona,
+                        customPersonaPrompt
+                      });
+                      setContextPackage(proc);
+                    }
+                  }}
+                >
+                  {p.id === targetProvider && (
+                    <span className="selected-check-badge">
+                      <Check size={9} strokeWidth={3} />
+                    </span>
+                  )}
                   <div
-                    key={p.id}
-                    className={`target-mini-card ${p.id === targetProvider ? "selected" : ""}`}
-                    onClick={() => {
-                      setTargetProvider(p.id);
-                      if (rawConversation) {
-                        const proc = compressor.process(rawConversation, {
-                          mode: strategy,
-                          lastNCount,
-                          targetProvider: p.id,
-                          persona,
-                          customPersonaPrompt
-                        });
-                        setContextPackage(proc);
-                      }
-                    }}
+                    className="target-mini-icon"
+                    style={{ background: p.metadata.accentColor }}
                   >
-                    {p.id === targetProvider && (
-                      <span className="selected-check-badge">
-                        <Check size={10} strokeWidth={3} />
-                      </span>
-                    )}
-                    <div
-                      className="target-mini-icon"
-                      style={{ background: p.metadata.accentColor }}
-                    >
-                      <ProviderLogo providerId={p.id} size={14} />
-                    </div>
-                    <span className="target-mini-name">{p.name}</span>
+                    <ProviderLogo providerId={p.id} size={13} />
                   </div>
-                ))}
+                  <span className="target-mini-name">{p.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Target AI Role Directive & Compression Options */}
+          <div className="panel-card">
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+              <div>
+                <span className="panel-title" style={{ display: "flex", alignItems: "center", gap: "4px", marginBottom: "4px" }}>
+                  <UserCheck size={12} color="var(--primary)" /> Role Directive
+                </span>
+                <select
+                  className="form-select"
+                  value={persona}
+                  onChange={(e) => handlePersonaChange(e.target.value as PersonaId)}
+                >
+                  {Object.entries(PERSONA_DESCRIPTIONS).map(([id, info]) => (
+                    <option key={id} value={id}>
+                      {info.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <span className="panel-title" style={{ display: "flex", alignItems: "center", gap: "4px", marginBottom: "4px" }}>
+                  <Zap size={12} color="var(--primary)" /> Compression Mode
+                </span>
+                <select
+                  className="form-select"
+                  value={strategy}
+                  onChange={(e) => handleStrategyChange(e.target.value as ContextStrategyMode)}
+                >
+                  <option value="smart">Smart Optimization (Rec.)</option>
+                  <option value="full">Complete Conversation</option>
+                  <option value="important">Key Decisions & Notes</option>
+                  <option value="last_n">Recent Messages Only</option>
+                </select>
               </div>
             </div>
 
-            {/* Target AI Persona Adapter */}
-            <div className="panel-card">
-              <div className="panel-header">
-                <span className="panel-title" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                  <UserCheck size={13} color="var(--primary)" /> Target Role Directive
-                </span>
-                <span style={{ fontSize: "11px", fontWeight: "600", color: "var(--primary)" }}>
-                  {currentPersonaInfo.name}
-                </span>
-              </div>
-              <select
-                className="form-select"
-                value={persona}
-                onChange={(e) => handlePersonaChange(e.target.value as PersonaId)}
-              >
-                {Object.entries(PERSONA_DESCRIPTIONS).map(([id, info]) => (
-                  <option key={id} value={id}>
-                    {info.name}
-                  </option>
-                ))}
-              </select>
-
-              {persona === "custom" && (
-                <div style={{ marginTop: "6px" }}>
-                  <textarea
-                    className="form-input"
-                    style={{ height: "60px", resize: "none", fontSize: "12px" }}
-                    placeholder="Type custom target role directive..."
-                    value={customPersonaPrompt}
-                    onChange={(e) => handleCustomPromptChange(e.target.value)}
-                  />
-                </div>
-              )}
-            </div>
-
-            {/* Strategy Switcher Pills */}
-            <StrategySelector
-              strategy={strategy}
-              onSelectStrategy={handleStrategyChange}
-              lastNCount={lastNCount}
-              onChangeLastNCount={setLastNCount}
-            />
-
-            {/* Privacy Shield Status Pill */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "var(--bg-subtle)", padding: "6px 12px", borderRadius: "8px", border: "1px solid var(--border-main)" }}>
-              <span style={{ fontSize: "11px", fontWeight: "700", color: "var(--success)", display: "flex", alignItems: "center", gap: "6px" }}>
-                <ShieldCheck size={14} color="var(--success)" /> Privacy Shield Active
-              </span>
-              <span style={{ fontSize: "10px", color: "var(--text-muted)", fontWeight: "500" }}>
-                Auto-redacting API keys & credentials
-              </span>
-            </div>
-
-            {contextPackage && (
-              <div className="stats-grid">
-                <div className="stat-card">
-                  <span className="stat-label">Estimated Token Size</span>
-                  <span className="stat-number">~{contextPackage.estimatedTokens.toLocaleString()}</span>
-                </div>
-                <div className="stat-card">
-                  <span className="stat-label">Fidelity Preserved</span>
-                  <span className="stat-number" style={{ color: "var(--success)" }}>
-                    {contextPackage.informationRetentionPercentage}%
-                  </span>
-                </div>
+            {persona === "custom" && (
+              <div style={{ marginTop: "4px" }}>
+                <textarea
+                  className="form-input"
+                  style={{ height: "48px", resize: "none", fontSize: "11px" }}
+                  placeholder="Type custom target role directive..."
+                  value={customPersonaPrompt}
+                  onChange={(e) => handleCustomPromptChange(e.target.value)}
+                />
               </div>
             )}
+          </div>
 
-            {/* Action Buttons */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "auto" }}>
-              <button
-                className="btn-secondary"
-                onClick={() => {
-                  if (contextPackage) copyToClipboard(contextPackage.formattedMarkdown);
-                }}
-              >
-                {copiedToast ? <Check size={14} color="var(--success)" /> : <Copy size={14} />}
-                {copiedToast ? "Copied Prompt to Clipboard" : "Copy Context Prompt"}
-              </button>
+          {/* Token Metrics & Privacy Shield Status */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              background: "var(--bg-surface)",
+              padding: "6px 10px",
+              borderRadius: "8px",
+              border: "1px solid var(--border-main)",
+              fontSize: "10.5px"
+            }}
+          >
+            <span
+              style={{ cursor: "pointer", fontWeight: "700", color: "var(--success)", display: "flex", alignItems: "center", gap: "5px" }}
+              onClick={() => setIsPrivacyModalOpen(true)}
+              title="Click to view Privacy Shield Security Guarantees"
+            >
+              <ShieldCheck size={13} color="var(--success)" /> Privacy Shield (100% Local)
+            </span>
 
-              <button className="btn-hero" onClick={() => handleExecuteTransfer(targetProvider)}>
-                Transfer Conversation to {targetInfo.name} <Send size={16} />
-              </button>
-            </div>
-          </>
-        )}
+            {contextPackage && (
+              <span style={{ fontWeight: "600", color: "var(--text-secondary)" }}>
+                Smart Optimized Context
+              </span>
+            )}
+          </div>
+        </div>
 
-        {activeTab === "preview" && (
-          contextPackage ? (
+        {/* Slide 2: Context Preview Slide (Scroll Right to view) */}
+        <div className="panel-slide">
+          {contextPackage ? (
             <PreviewEditor
               contextPackage={contextPackage}
               onCopy={copyToClipboard}
@@ -507,10 +537,11 @@ export const App: React.FC = () => {
                 No conversation analyzed yet. Click "Transfer" on the main tab.
               </p>
             </div>
-          )
-        )}
+          )}
+        </div>
 
-        {activeTab === "memories" && (
+        {/* Slide 3: Saved Memories Vault Slide */}
+        <div className="panel-slide">
           <MemoryList
             memories={savedMemories}
             onCopyMemory={(m) => {
@@ -519,9 +550,10 @@ export const App: React.FC = () => {
             }}
             onDeleteMemory={handleDeleteMemory}
           />
-        )}
+        </div>
 
-        {activeTab === "export" && (
+        {/* Slide 4: Export / Import Package Slide */}
+        <div className="panel-slide">
           <ExportImportModal
             contextPackage={contextPackage || undefined}
             rawConversation={rawConversation}
@@ -537,13 +569,36 @@ export const App: React.FC = () => {
                 setMessageCount(conv.messages.length);
                 const proc = compressor.process(conv, { mode: "smart", persona, customPersonaPrompt });
                 setContextPackage(proc);
-                setActiveTab("preview");
+                handleTabClick("preview", 1);
                 showToast("Successfully imported AICP package");
               }
             }}
           />
-        )}
+        </div>
       </div>
+
+      {activeTab === "transfer" && (
+        <div className="pinned-action-bar">
+          <button
+            className="btn-secondary"
+            style={{ flex: "0 0 auto" }}
+            onClick={() => {
+              if (contextPackage) copyToClipboard(contextPackage.formattedMarkdown);
+            }}
+          >
+            {copiedToast ? <Check size={14} color="var(--success)" /> : <Copy size={14} />}
+            {copiedToast ? "Copied" : "Copy Prompt"}
+          </button>
+
+          <button
+            className="btn-hero"
+            style={{ flex: 1 }}
+            onClick={() => handleExecuteTransfer(targetProvider)}
+          >
+            Transfer to {targetInfo.name} <Send size={15} />
+          </button>
+        </div>
+      )}
 
       <div className="app-footer">
         Having Issues? <a href="mailto:aniketpatel4p@gmail.com?subject=ContextBridge%20Bug%20Report" target="_blank" rel="noreferrer">Report Bug</a> | Made with ♥ by <a href="https://github.com/anikettP" target="_blank" rel="noreferrer">@anikettP</a>

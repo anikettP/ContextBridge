@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "ContextBridge — Universal AI Context Sync",
   "short_name": "ContextBridge",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Seamlessly transfer conversation goals, architecture decisions, and code across AI assistants with privacy and token optimization.",
   "icons": {
     "16": "icons/icon16.png",
@@ -15,8 +15,12 @@
     "activeTab",
     "scripting",
     "clipboardWrite",
-    "tabs"
+    "tabs",
+    "sidePanel"
   ],
+  "side_panel": {
+    "default_path": "src/popup/index.html"
+  },
   "host_permissions": [
     "https://chatgpt.com/*",
     "https://chat.openai.com/*",

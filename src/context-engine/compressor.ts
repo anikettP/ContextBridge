@@ -74,7 +74,7 @@ export class ContextCompressor {
     );
 
     // Run PrivacyShield sanitization to auto-redact API keys, secret tokens, and passwords
-    const { sanitizedText: formattedMarkdown } = PrivacyShield.sanitize(rawMarkdown);
+    const { sanitizedText: formattedMarkdown, redactedCount } = PrivacyShield.sanitize(rawMarkdown);
 
     const estimatedTokens = estimateTokenCount(formattedMarkdown);
 
@@ -101,7 +101,8 @@ export class ContextCompressor {
       informationRetentionPercentage: retentionPercentage,
       metadata,
       recentMessages: messagesToInclude,
-      formattedMarkdown
+      formattedMarkdown,
+      redactedCredentialsCount: redactedCount
     };
   }
 }

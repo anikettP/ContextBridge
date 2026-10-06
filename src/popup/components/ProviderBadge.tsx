@@ -36,7 +36,7 @@ export const ProviderBadge: React.FC<ProviderBadgeProps> = ({
             gap: "4px"
           }}
         >
-          <CheckCircle2 size={12} /> {detectedMessageCount} Turns
+          <CheckCircle2 size={12} /> {detectedMessageCount} Messages
         </span>
       </div>
 
