@@ -7,7 +7,6 @@
 [![License](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)
 
 > **ContextBridge** is a privacy-first, developer-centric Chrome Extension that seamlessly bridges your project context, goals, architectural decisions, and code specifications across **ChatGPT**, **Claude**, **Google Gemini**, **Grok**, **Perplexity**, **Microsoft Copilot**, and **DeepSeek**.
-
 ---
 
 ## 🌟 Key Features
