@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "ContextBridge - Universal AI Context Sync",
   "short_name": "ContextBridge",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Seamlessly transfer conversation goals, architecture decisions, and code across AI assistants with privacy and token optimization.",
   "minimum_chrome_version": "114",
   "icons": {
