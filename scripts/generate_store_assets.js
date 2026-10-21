@@ -1111,13 +1111,27 @@ const HTML_CONTENT = `<!DOCTYPE html>
           icon48: document.getElementById('canvas_icon48').toDataURL('image/png'),
           icon32: document.getElementById('canvas_icon32').toDataURL('image/png'),
           icon16: document.getElementById('canvas_icon16').toDataURL('image/png'),
+          
           promo_small: document.getElementById('canvas_promo_small').toDataURL('image/png'),
+          promo_small_jpg: document.getElementById('canvas_promo_small').toDataURL('image/jpeg', 0.95),
+
           promo_marquee: document.getElementById('canvas_promo_marquee').toDataURL('image/png'),
+          promo_marquee_jpg: document.getElementById('canvas_promo_marquee').toDataURL('image/jpeg', 0.95),
+
           ss1: document.getElementById('canvas_ss1').toDataURL('image/png'),
+          ss1_jpg: document.getElementById('canvas_ss1').toDataURL('image/jpeg', 0.95),
+
           ss2: document.getElementById('canvas_ss2').toDataURL('image/png'),
+          ss2_jpg: document.getElementById('canvas_ss2').toDataURL('image/jpeg', 0.95),
+
           ss3: document.getElementById('canvas_ss3').toDataURL('image/png'),
+          ss3_jpg: document.getElementById('canvas_ss3').toDataURL('image/jpeg', 0.95),
+
           ss4: document.getElementById('canvas_ss4').toDataURL('image/png'),
-          ss5: document.getElementById('canvas_ss5').toDataURL('image/png')
+          ss4_jpg: document.getElementById('canvas_ss4').toDataURL('image/jpeg', 0.95),
+
+          ss5: document.getElementById('canvas_ss5').toDataURL('image/png'),
+          ss5_jpg: document.getElementById('canvas_ss5').toDataURL('image/jpeg', 0.95)
         };
 
         const res = await fetch('/save', {
@@ -1166,7 +1180,15 @@ const server = http.createServer(async (req, res) => {
           const dir = path.dirname(targetPath);
           if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
           fs.writeFileSync(targetPath, base64Buffer);
-          console.log(`Saved: ${targetPath}`);
+          console.log(`Saved PNG: ${targetPath}`);
+        };
+
+        const saveJpg = (targetPath, base64Data) => {
+          const base64Buffer = Buffer.from(base64Data.replace(/^data:image\/jpeg;base64,/, ''), 'base64');
+          const dir = path.dirname(targetPath);
+          if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+          fs.writeFileSync(targetPath, base64Buffer);
+          console.log(`Saved JPG (No Alpha): ${targetPath}`);
         };
 
         // Icons
@@ -1178,28 +1200,42 @@ const server = http.createServer(async (req, res) => {
         savePng(path.join(rootDir, 'store-assets/cws_store_icon_128x128.png'), data.icon128);
         savePng(path.join(rootDir, 'store-assets/cws_store_icon_1787382679440.png'), data.icon128);
 
-        // Promo Tiles
+        // Promo Tiles (PNG & JPEG 24-bit no alpha)
         savePng(path.join(rootDir, 'store-assets/cws_promo_small_440x280.png'), data.promo_small);
+        saveJpg(path.join(rootDir, 'store-assets/cws_promo_small_440x280.jpg'), data.promo_small_jpg);
         savePng(path.join(rootDir, 'store-assets/cws_promo_small_440x280_1787382697746.png'), data.promo_small);
+        saveJpg(path.join(rootDir, 'store-assets/cws_promo_small_440x280_1787382697746.jpg'), data.promo_small_jpg);
 
         savePng(path.join(rootDir, 'store-assets/cws_promo_marquee_1400x560.png'), data.promo_marquee);
+        saveJpg(path.join(rootDir, 'store-assets/cws_promo_marquee_1400x560.jpg'), data.promo_marquee_jpg);
         savePng(path.join(rootDir, 'store-assets/cws_promo_marquee_1400x560_1787382710675.png'), data.promo_marquee);
+        saveJpg(path.join(rootDir, 'store-assets/cws_promo_marquee_1400x560_1787382710675.jpg'), data.promo_marquee_jpg);
 
-        // Screenshots
+        // Screenshots (PNG & JPEG 24-bit no alpha - 1280x800)
         savePng(path.join(rootDir, 'store-assets/cws_screenshot1_context_transfer.png'), data.ss1);
+        saveJpg(path.join(rootDir, 'store-assets/cws_screenshot1_context_transfer.jpg'), data.ss1_jpg);
         savePng(path.join(rootDir, 'store-assets/cws_screenshot1_context_transfer_1787382726717.png'), data.ss1);
+        saveJpg(path.join(rootDir, 'store-assets/cws_screenshot1_context_transfer_1787382726717.jpg'), data.ss1_jpg);
 
         savePng(path.join(rootDir, 'store-assets/cws_screenshot2_privacy_shield.png'), data.ss2);
+        saveJpg(path.join(rootDir, 'store-assets/cws_screenshot2_privacy_shield.jpg'), data.ss2_jpg);
         savePng(path.join(rootDir, 'store-assets/cws_screenshot2_privacy_shield_1787382742646.png'), data.ss2);
+        saveJpg(path.join(rootDir, 'store-assets/cws_screenshot2_privacy_shield_1787382742646.jpg'), data.ss2_jpg);
 
         savePng(path.join(rootDir, 'store-assets/cws_screenshot3_target_personas.png'), data.ss3);
+        saveJpg(path.join(rootDir, 'store-assets/cws_screenshot3_target_personas.jpg'), data.ss3_jpg);
         savePng(path.join(rootDir, 'store-assets/cws_screenshot3_target_personas_1787382758098.png'), data.ss3);
+        saveJpg(path.join(rootDir, 'store-assets/cws_screenshot3_target_personas_1787382758098.jpg'), data.ss3_jpg);
 
         savePng(path.join(rootDir, 'store-assets/cws_screenshot4_code_aggregator.png'), data.ss4);
+        saveJpg(path.join(rootDir, 'store-assets/cws_screenshot4_code_aggregator.jpg'), data.ss4_jpg);
         savePng(path.join(rootDir, 'store-assets/cws_screenshot4_code_aggregator_1787382776299.png'), data.ss4);
+        saveJpg(path.join(rootDir, 'store-assets/cws_screenshot4_code_aggregator_1787382776299.jpg'), data.ss4_jpg);
 
         savePng(path.join(rootDir, 'store-assets/cws_screenshot5_multi_ai_support.png'), data.ss5);
+        saveJpg(path.join(rootDir, 'store-assets/cws_screenshot5_multi_ai_support.jpg'), data.ss5_jpg);
         savePng(path.join(rootDir, 'store-assets/cws_screenshot5_multi_ai_support_1787382790950.png'), data.ss5);
+        saveJpg(path.join(rootDir, 'store-assets/cws_screenshot5_multi_ai_support_1787382790950.jpg'), data.ss5_jpg);
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: true }));

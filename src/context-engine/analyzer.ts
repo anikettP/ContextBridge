@@ -96,7 +96,8 @@ export class ContextAnalyzer {
       });
     });
 
-    const primaryGoal = goals.length > 0 ? goals[0] : conversation.title;
+    const firstUserRequest = messages.find((message) => message.role === "user")?.content.trim();
+    const primaryGoal = goals.length > 0 ? goals[0] : firstUserRequest;
 
     return {
       goal: primaryGoal,

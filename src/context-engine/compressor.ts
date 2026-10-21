@@ -57,8 +57,7 @@ export class ContextCompressor {
 
       case "smart":
       default:
-        // Smart mode: Includes all extracted metadata + recent key turns
-        messagesToInclude = conversation.messages.slice(-10);
+        messagesToInclude = this.selectSmartMessages(conversation.messages);
         break;
     }
 
@@ -104,5 +103,18 @@ export class ContextCompressor {
       formattedMarkdown,
       redactedCredentialsCount: redactedCount
     };
+  }
+
+  private selectSmartMessages(messages: Message[]): Message[] {
+    const recentMessages = messages.slice(-10);
+    const selected = new Map<string, Message>();
+
+    const firstUserRequest = messages.find((message) => message.role === "user");
+    [firstUserRequest, ...recentMessages].forEach((message) => {
+      if (!message) return;
+      selected.set(message.id, message);
+    });
+
+    return messages.filter((message) => selected.has(message.id));
   }
 }

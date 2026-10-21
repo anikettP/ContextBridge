@@ -665,6 +665,34 @@ html, body {
   z-index: 10;
 }
 
+.sponsor-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin: 0 8px 2px;
+  padding: 5px 8px;
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  border-radius: 10px;
+  background: rgba(245, 158, 11, 0.12);
+  color: #b45309;
+  font-size: 10px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: var(--transition-fast);
+  z-index: 10;
+}
+
+.sponsor-button:hover {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: #f59e0b;
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .sponsor-button {
+  color: #fbbf24;
+}
+
 /* Footer (Compact Glassy, Zero Bottom Gap) */
 .app-footer {
   text-align: center;

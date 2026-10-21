@@ -48,33 +48,24 @@ export class ChatGPTProvider extends BaseAIProvider {
     }
 
     let messageElements = Array.from(
-      document.querySelectorAll("[data-message-author-role], article, [data-message-id]")
+      document.querySelectorAll("[data-message-author-role='user'], [data-message-author-role='assistant']")
     );
 
     if (messageElements.length === 0) {
       messageElements = Array.from(
-        document.querySelectorAll(".text-base, [class*='conversation-turn']")
+        document.querySelectorAll("article, [data-message-id], [class*='conversation-turn']")
       );
     }
 
-    for (let i = 0; i < messageElements.length; i++) {
-      const el = messageElements[i];
+    const uniqueElements = Array.from(new Set(messageElements));
 
-      let role: MessageRole = "assistant";
-      const authorRole = el.getAttribute("data-message-author-role");
+    for (let i = 0; i < uniqueElements.length; i++) {
+      const el = uniqueElements[i];
 
-      if (authorRole === "user" || authorRole === "assistant") {
-        role = authorRole;
-      } else {
-        const isUser =
-          el.querySelector("[data-message-author-role='user']") !== null ||
-          el.classList.contains("user-message") ||
-          (el as HTMLElement).innerText?.includes("You said:");
-        role = isUser ? "user" : "assistant";
-      }
+      const role = this.getMessageRole(el, i);
 
       const markdownEl = el.querySelector(".markdown, .whitespace-pre-wrap, [class*='markdown']") || el;
-      const content = markdownEl.textContent ? markdownEl.textContent.trim() : "";
+      const content = this.cleanMessageContent((markdownEl as HTMLElement).innerText || markdownEl.textContent || "");
 
       if (content) {
         messages.push({
@@ -98,6 +89,35 @@ export class ChatGPTProvider extends BaseAIProvider {
       url: typeof window !== "undefined" ? window.location.href : undefined,
       isPartial: false
     };
+  }
+
+  private getMessageRole(element: Element, index: number): MessageRole {
+    const roleValue = element.getAttribute("data-message-author-role") ||
+      element.getAttribute("data-role") ||
+      element.getAttribute("data-is-user");
+
+    if (roleValue === "user" || roleValue === "true") return "user";
+    if (roleValue === "assistant" || roleValue === "false") return "assistant";
+
+    const descriptor = [
+      element.className,
+      element.getAttribute("aria-label"),
+      element.getAttribute("data-testid"),
+      element.parentElement?.className,
+      element.parentElement?.getAttribute("data-testid")
+    ].filter(Boolean).join(" ").toLowerCase();
+
+    if (/user|human|you-message|prompt/.test(descriptor)) return "user";
+    if (/assistant|bot|response|message-content/.test(descriptor)) return "assistant";
+
+    return index % 2 === 0 ? "user" : "assistant";
+  }
+
+  private cleanMessageContent(content: string): string {
+    return content
+      .replace(/^\s*(copy|edit|retry|regenerate)\s*$/gim, "")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
   }
 
   async injectContext(formattedContext: string): Promise<boolean> {

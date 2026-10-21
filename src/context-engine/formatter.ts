@@ -127,8 +127,12 @@ export class ContextFormatter {
       });
     }
 
-    lines.push(`## Continuation Request`);
-    lines.push(`Please acknowledge that you have received this transferred context from **${sourceName}** in your role as **${personaInfo.name}**, and provide the next step or solution to continue our conversation.`);
+    const latestUserRequest = [...messagesToInclude].reverse().find((message) => message.role === "user");
+    lines.push(`## Current User Request`);
+    lines.push(latestUserRequest?.content || "Continue from the project goal, decisions, requirements, and open tasks above.");
+    lines.push(``);
+    lines.push(`## Instructions for Continuation`);
+    lines.push(`Use the transferred context as working memory. Do not ask the user to acknowledge or repeat the context. Continue directly with the current request, preserve established decisions and constraints, and state any assumptions before making changes.`);
 
     return lines.join("\n");
   }

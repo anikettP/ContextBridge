@@ -55,6 +55,19 @@ describe("Provider Adapters Test Suite", () => {
     expect(conversation.messages[1].content).toContain("Manifest V3");
   });
 
+  it("should infer alternating roles when ChatGPT markup has no role attributes", async () => {
+    const chatgpt = new ChatGPTProvider();
+    document.body.innerHTML = `
+      <h1>Context handoff</h1>
+      <article><div class="text-base">Build the release plan.</div></article>
+      <article><div class="text-base">We should start with authentication.</div></article>
+    `;
+
+    const conversation = await chatgpt.extractConversation();
+
+    expect(conversation.messages.map((message) => message.role)).toEqual(["user", "assistant"]);
+  });
+
   it("should handle composer text injection into mock textarea", async () => {
     const chatgpt = new ChatGPTProvider();
     document.body.innerHTML = `<textarea id="prompt-textarea"></textarea>`;

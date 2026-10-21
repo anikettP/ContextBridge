@@ -130,6 +130,7 @@ export interface ExtensionSettings {
 }
 
 export type ExtensionMessage =
+  | { type: "OPEN_EXTENSION_POPUP" }
   | { type: "DETECT_PROVIDER" }
   | { type: "EXTRACT_CONVERSATION" }
   | { type: "INJECT_CONTEXT"; payload: { formattedContext: string } }

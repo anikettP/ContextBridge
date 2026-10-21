@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && esbuild src/content/content.ts --bundle --outfile=dist/content.js --target=es2022",
+    "zip": "npm run build && powershell -Command \"Compress-Archive -Path dist/* -DestinationPath ContextBridge_v2.0.0_production.zip -Force\"",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },

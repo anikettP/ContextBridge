@@ -6,6 +6,112 @@ import { ExtensionMessage } from "../shared/types";
 const extractor = new ContentExtractor();
 const injector = new ContentInjector();
 
+function mountFloatingButton(): void {
+  if (typeof document === "undefined" || document.getElementById("contextbridge-floating-host")) return;
+
+  const host = document.createElement("div");
+  host.id = "contextbridge-floating-host";
+  const shadowRoot = host.attachShadow({ mode: "closed" });
+  const style = document.createElement("style");
+  style.textContent = `
+    :host { all: initial; }
+    button {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 2147483647;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: linear-gradient(135deg, #2563eb, #059669);
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, .28);
+      cursor: pointer;
+      font: 700 12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    button:hover { transform: translateY(-2px); box-shadow: 0 9px 24px rgba(15, 23, 42, .36); }
+    button:active { transform: translateY(0); }
+    .mark { font-size: 14px; line-height: 1; }
+  `;
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.title = "Drag to move • Click to open ContextBridge";
+  button.innerHTML = `<span class="mark">↔</span><span>ContextBridge</span>`;
+
+  let isDragging = false;
+  let suppressClick = false;
+  let startX = 0;
+  let startY = 0;
+  let startLeft = 0;
+  let startTop = 0;
+
+  const applyPosition = (left: number, top: number) => {
+    const maxLeft = Math.max(8, window.innerWidth - button.offsetWidth - 8);
+    const maxTop = Math.max(8, window.innerHeight - button.offsetHeight - 8);
+    button.style.left = `${Math.min(Math.max(8, left), maxLeft)}px`;
+    button.style.top = `${Math.min(Math.max(8, top), maxTop)}px`;
+    button.style.right = "auto";
+    button.style.bottom = "auto";
+  };
+
+  chrome.storage.local.get("cb_floating_button_position", (result) => {
+    const position = result.cb_floating_button_position as { left?: number; top?: number } | undefined;
+    if (typeof position?.left === "number" && typeof position.top === "number") {
+      applyPosition(position.left, position.top);
+    }
+  });
+
+  button.addEventListener("pointerdown", (event) => {
+    isDragging = true;
+    suppressClick = false;
+    startX = event.clientX;
+    startY = event.clientY;
+    const rect = button.getBoundingClientRect();
+    startLeft = rect.left;
+    startTop = rect.top;
+    button.setPointerCapture(event.pointerId);
+    event.preventDefault();
+  });
+
+  button.addEventListener("pointermove", (event) => {
+    if (!isDragging) return;
+    const deltaX = event.clientX - startX;
+    const deltaY = event.clientY - startY;
+    if (Math.abs(deltaX) > 4 || Math.abs(deltaY) > 4) suppressClick = true;
+    applyPosition(startLeft + deltaX, startTop + deltaY);
+  });
+
+  button.addEventListener("pointerup", (event) => {
+    if (!isDragging) return;
+    isDragging = false;
+    button.releasePointerCapture(event.pointerId);
+    const rect = button.getBoundingClientRect();
+    chrome.storage.local.set({
+      cb_floating_button_position: { left: rect.left, top: rect.top }
+    });
+  });
+
+  button.addEventListener("click", () => {
+    if (suppressClick) {
+      suppressClick = false;
+      return;
+    }
+    chrome.runtime.sendMessage({ type: "OPEN_EXTENSION_POPUP" }, (response) => {
+      if (chrome.runtime.lastError || response?.type === "RESPONSE_ERROR") {
+        showInPageNotification("ContextBridge could not open");
+      }
+    });
+  });
+
+  shadowRoot.append(style, button);
+  document.documentElement.appendChild(host);
+}
+
 /**
  * Renders a clean in-page toast notification for confirmation when context is injected.
  */
@@ -105,6 +211,7 @@ async function checkAndAutoInjectOnLoad(): Promise<void> {
 
 // Run auto-inject check & float pill when script loads
 if (typeof document !== "undefined") {
+  mountFloatingButton();
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", checkAndAutoInjectOnLoad);
   } else {

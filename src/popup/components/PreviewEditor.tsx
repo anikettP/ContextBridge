@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Check, Copy, Save } from "lucide-react";
 import { ContextPackage } from "../../shared/types";
 
@@ -17,6 +17,11 @@ export const PreviewEditor: React.FC<PreviewEditorProps> = ({
   const [copied, setCopied] = useState(false);
   const [memoryName, setMemoryName] = useState(contextPackage.title);
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    setMarkdown(contextPackage.formattedMarkdown);
+    setMemoryName(contextPackage.title);
+  }, [contextPackage.formattedMarkdown, contextPackage.title]);
 
   const handleCopy = () => {
     onCopy(markdown);

@@ -2,6 +2,38 @@ import { SUPPORTED_PROVIDERS } from "../shared/constants";
 import { storageService } from "../storage/storage";
 
 if (typeof chrome !== "undefined" && chrome.runtime) {
+  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message?.type !== "OPEN_EXTENSION_POPUP") return false;
+
+    const tabId = sender.tab?.id;
+    if (!tabId) {
+      sendResponse({ type: "RESPONSE_ERROR", error: "Side Panel is unavailable." });
+      return false;
+    }
+
+    const openSidePanel = () => {
+      if (!chrome.sidePanel) {
+        sendResponse({ type: "RESPONSE_ERROR", error: "Extension popup is unavailable." });
+        return;
+      }
+
+      chrome.sidePanel.open({ tabId })
+        .then(() => sendResponse({ type: "RESPONSE_SUCCESS", payload: { opened: true } }))
+        .catch(() => sendResponse({ type: "RESPONSE_ERROR", error: "Unable to open ContextBridge." }));
+    };
+
+    if (chrome.action?.openPopup) {
+      chrome.action.openPopup().then(
+        () => sendResponse({ type: "RESPONSE_SUCCESS", payload: { opened: true } }),
+        openSidePanel
+      );
+    } else {
+      openSidePanel();
+    }
+
+    return true;
+  });
+
   chrome.runtime.onInstalled.addListener(() => {
     console.log("ContextBridge Extension Installed Successfully.");
   });

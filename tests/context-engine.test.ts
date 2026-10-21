@@ -63,6 +63,29 @@ describe("Context Engine Test Suite", () => {
     expect(pkg.formattedMarkdown).toContain("Critical Code Architecture");
   });
 
+  it("should keep user requests in smart context and avoid using title as goal", () => {
+    const conversation: Conversation = {
+      id: "long-conversation",
+      provider: "chatgpt",
+      title: "Five features to build first",
+      messages: Array.from({ length: 14 }, (_, index) => ({
+        id: `message-${index}`,
+        role: index % 2 === 0 ? "user" as const : "assistant" as const,
+        content: index === 0 ? "Please design the first release plan." : `Turn ${index}`
+      }))
+    };
+
+    const pkg = new ContextCompressor().process(conversation, { mode: "smart" });
+    const fullPkg = new ContextCompressor().process(conversation, { mode: "full" });
+
+    expect(pkg.metadata.goal).toBe("Please design the first release plan.");
+    expect(pkg.formattedMarkdown).toContain("Please design the first release plan.");
+    expect(pkg.formattedMarkdown).toContain("Do not ask the user to acknowledge");
+    expect(pkg.transferredMessageCount).toBe(11);
+    expect(fullPkg.transferredMessageCount).toBe(14);
+    expect(fullPkg.formattedMarkdown.length).toBeGreaterThan(pkg.formattedMarkdown.length);
+  });
+
   it("should format portable AICP v1.0 JSON package", () => {
     const formatter = new ContextFormatter();
     const analyzer = new ContextAnalyzer();

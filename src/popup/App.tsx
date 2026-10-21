@@ -24,6 +24,7 @@ import { storageService } from "../storage/storage";
 import { generateUniqueId } from "../shared/utils";
 import {
   Check,
+  Coffee,
   Copy,
   ExternalLink,
   FileText,
@@ -228,9 +229,10 @@ export const App: React.FC = () => {
     const targetId = selectedTargetId || targetProvider;
 
     let pkg = contextPackage;
-    if (!pkg && rawConversation) {
+    if (rawConversation) {
       pkg = compressor.process(rawConversation, {
         mode: strategy,
+        lastNCount,
         targetProvider: targetId,
         persona,
         customPersonaPrompt
@@ -599,6 +601,15 @@ export const App: React.FC = () => {
           </button>
         </div>
       )}
+
+      <a
+        className="sponsor-button"
+        href="https://buymeacoffee.com/aniketpate1"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <Coffee size={13} /> Support ContextBridge
+      </a>
 
       <div className="app-footer">
         Having Issues? <a href="mailto:aniketpatel4p@gmail.com?subject=ContextBridge%20Bug%20Report" target="_blank" rel="noreferrer">Report Bug</a> | Made with ♥ by <a href="https://github.com/anikettP" target="_blank" rel="noreferrer">@anikettP</a>
